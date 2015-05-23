@@ -1,0 +1,34 @@
+---
+title: "README.md"
+author: "Chris Keaney"
+date: "May 23, 2015"
+output: html_document
+---
+
+## Getting Data Course Project README
+
+This is the repository for the Coursera Getting Data Course Project.  The goal is to 
+produce a tidy data set based on the UCI HAR Dataset that was provided on the course
+project page.
+
+There is one script called 'run_analysis.r' that requires that the UCI HAR Dataset has been
+downloaded and unzipped to your working directory.
+
+The 'run_analysis.r' script will utilize this folder and will read the following files:
+
+* activity_labels.txt
+* features.txt
+* subject/x/y.txt from both the test and train folders.
+
+The script will export to the working directory a file called "tidy_data_set.txt" that contains 
+the following columns:
+
+* Activity.Name:  the descriptive activity name of the based on the 'activity_labels' file.
+* Subject:  the ID of the subject being measured.
+* VarFinal:  A categorical vector that contains the 66 mean and std related measurements from
+the "feature_labels" file.
+* mean:  the mean of the individual mean related variables from VarFinal.
+* std:  the mean of the individual standard deviation (std) related variables from VarFinal.
+
+Note that for this project, I made the assumption that the variables being measured were
+"mean" and "standard deviation", and that the features were in fact all categories with a mean and standard deviation measurement.  In addition, VarFinal only includes original mean & std related to the original signals and does not include meanFreq, gravityMean, etc.  I did this so that I could further practice some of the functionality learned during the course.  The codebook contains specific steps, transformations, and assumptions.

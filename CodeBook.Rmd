@@ -1,0 +1,69 @@
+---
+title: "CodeBook.md"
+author: "Chris Keaney"
+date: "May 23, 2015"
+output: html_document
+---
+
+## Getting Data Course Project - CodeBook
+
+The "run_analysis.r" script takes the following steps:
+
+* Read in relevant data tables
+* Apply column names
+* Merge subject/x/y data tables
+* Clean Column Names / Add Source Column
+* Combine Test/Train data sets
+* Create Skinny Data Table where features are a Categorical vector
+* Split out mean/std variables
+* Recast data into Tidy Data Set
+
+### Read in Relevant Data Tables
+
+The script first attempts to read in the following data tables:
+
+* activity_labels.txt
+* features.txt
+* subject/x/y.txt from both the test and train folders.
+
+Other files (including the README.txt for the data, as well as features_info.txt) are left intact for reference.  
+
+### Apply Column Names
+
+Descriptive column names are applied to each data set, including using 'features.txt' to bring in the 561 feature names into the X test/train files.
+
+### Merge subject/x/y Data Tables
+
+The subject/x/y data tables are merged together to create one combined data set each for the test and training data.  All the files are of the same length, so it is assumed that they are they are all in the same order, and that the lines for feature data and related activity are related to each line in the subject files.
+
+### Clean Column Names / Add Source Column
+
+In trying to work with the resulting data set, there was an error related to the feature column namesand using the reshape2 library.  The script uses the following line of code to coerce the column names to work with reshape2:
+
+make.names(names=names(test_data), unique=TRUE,allow_=TRUE)
+
+In addition, a new column is added to both the test/train datasets that allows for the tracking of which data set each observation in the merged data set came from.
+
+### Merge Test/Train and Create a Final Clean DataFrame to Manipulate
+
+The cleaned up Test/Train datasets are then merged into a "master_data" table using rbind.  Activity labels are then mapped in using a left_join on the master_data table.  Features that contain .mean. or .std. are individually selected out along with Subject, and Activity name.  Finally, the master data is converted using tbl_df() in order to allow for manimpulation with the dplyr library.
+
+### Create Skinny Data Table
+
+Note that for this course project, I have decided that "mean" and "standard deviation (std)" are the variables being measured, and that the features are in fact all part of one factor variable.  I did this more for the practice of further having to manipulate the data set given the open nature instructions of the project.  
+
+As a result of the above assumption, the melt() function is used to bring all 66 features (the leftover features when you select on ".mean." and ".std."") into one column called 'variable', under a data frame called "skinny_table".  
+
+Please refer to the "README.txt" and "features.txt" files under the "UCI HAR Dataset" folder for more information about the specific features and files related to the Samsung data.
+
+### Split out maen/std variables
+
+The resulting data set is then further manipulated to split out "mean" and "std" into individual variables bases on the contents of "variable".  Finally a "VarFinal" factor variable is created to remove "mean", "std", and stray periods from the "variable" column, providing a clean, readable descriptor of each feature. 
+
+### Tidy Data Set Creation
+
+The "skinny_data" dataframe is then recast using the dcast() function, with the Subject, Activity.Name, VarFinal factor variables, and the mean of the mean/std variables.  This dataset is created under "tidy_data_set", and is also written to a file called "tidy_data_set.txt" in the working directory.  
+
+Please refer to the "README.md" file for more information about the script. 
+
+
